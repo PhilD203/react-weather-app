@@ -13,7 +13,8 @@ const Weather = (props) => {
                 {props.temp_celsius}&deg;
             </h1>
             {/**show max and min temp */}
-            {minMaxTemp(props.temp_min, props.temp_max)}
+            {minMaxTemp(props.temp_max, props.temp_min)}
+            
             <h4 className="py-3">{props.description}</h4>
 
         </div>

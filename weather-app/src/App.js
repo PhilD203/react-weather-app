@@ -18,7 +18,7 @@ class App extends React.Component {
       celsius: undefined,
       tempMax: undefined,
       tempMin: undefined,
-      descripton: "",
+      description: "",
       error: false
     };
     this.getWeather();
@@ -32,11 +32,15 @@ class App extends React.Component {
   getWeather = async () => {
     const apiCall = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=London,uk&appid=${API_KEY}`);
     const res = await apiCall.json();
+    console.log(res);
 
     this.setState({
       city: res.name,
       country: res.sys.country,
-      celsius: this.calCelsius(res.main.temp)
+      celsius: this.calCelsius(res.main.temp),
+      tempMax: this.calCelsius(res.main.temp_max),
+      tempMin: this.calCelsius(res.main.temp_min),
+      description: res.weather[0].description
     });
   };
 
@@ -49,7 +53,7 @@ class App extends React.Component {
         temp_celsius={this.state.celsius}
         temp_min={this.state.tempMin}
         temp_max={this.state.tempMax}
-        descripton={this.state.descripton}/>
+        description={this.state.description}/>
       </div>
     );
   };
