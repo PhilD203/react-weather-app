@@ -8,7 +8,7 @@ const API_KEY = "250d65d9d372b2222ad7aa1f9c5b68e5";
 //api.openweathermap.org/data/2.5/weather?q=London,uk
 
 class App extends React.Component {
-  constructor(){
+  constructor() {
     super();
     this.state = {
       city: undefined,
@@ -22,11 +22,49 @@ class App extends React.Component {
       error: false
     };
     this.getWeather();
+
+    this.weatherIcon = {
+      Thunderstorm: "wi-thunderstorm",
+      Drizzle: "wi-sleet",
+      Rain: "wi-storm-showers",
+      Snow: "wi-snow",
+      Atmosphere: "wi-fog",
+      Clear: "wi-day-sunny",
+      Clouds: "wi-day-fog"
+    }
   }
 
-  calCelsius(temp){
+  calCelsius(temp) {
     let calulation = Math.floor(temp - 273.15);
     return calulation;
+  }
+
+  getWeatherIcon(icon, rangeId) {
+    switch (true) {
+      case rangeId >= 200 && rangeId <= 232:
+        this.setState({ icon: this.weatherIcon.Thunderstorm });
+        break;
+      case rangeId >= 300 && rangeId <= 321:
+        this.setState({ icon: this.weatherIcon.Drizzle });
+        break;
+      case rangeId >= 500 && rangeId <= 532:
+        this.setState({ icon: this.weatherIcon.Rain });
+        break;
+      case rangeId >= 600 && rangeId <= 622:
+        this.setState({ icon: this.weatherIcon.Snow });
+        break;
+      case rangeId >= 701 && rangeId <= 781:
+        this.setState({ icon: this.weatherIcon.Atmosphere });
+        break;
+      case rangeId === 800:
+        this.setState({ icon: this.weatherIcon.Clear });
+        break;
+      case rangeId >= 801 && rangeId <= 804:
+        this.setState({ icon: this.weatherIcon.Clouds });
+        break;
+      default: 
+        this.setState({ icon: this.weatherIcon.Clouds });
+    }
   }
 
   getWeather = async () => {
@@ -40,20 +78,23 @@ class App extends React.Component {
       celsius: this.calCelsius(res.main.temp),
       tempMax: this.calCelsius(res.main.temp_max),
       tempMin: this.calCelsius(res.main.temp_min),
-      description: res.weather[0].description
+      description: res.weather[0].description,
     });
+
+    this.getWeatherIcon(this.weatherIcon, res.weather[0].id);
   };
 
   render() {
     return (
       <div className="App">
-        <Weather 
-        city={this.state.city} 
-        country={this.state.country} 
-        temp_celsius={this.state.celsius}
-        temp_min={this.state.tempMin}
-        temp_max={this.state.tempMax}
-        description={this.state.description}/>
+        <Weather
+          city={this.state.city}
+          country={this.state.country}
+          temp_celsius={this.state.celsius}
+          temp_min={this.state.tempMin}
+          temp_max={this.state.tempMax}
+          description={this.state.description}
+          weatherIcon={this.state.icon} />
       </div>
     );
   };
