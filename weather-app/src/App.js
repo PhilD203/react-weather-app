@@ -10,20 +10,27 @@ const API_KEY = "250d65d9d372b2222ad7aa1f9c5b68e5";
 class App extends React.Component {
   constructor(){
     super();
-    this.state = {};
+    this.state = {
+      city: undefined,
+      country: undefined
+    };
     this.getWeather();
   }
 
   getWeather = async () => {
     const apiCall = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=London,uk&appid=${API_KEY}`);
     const res = await apiCall.json();
-    console.log(res);
+
+    this.setState({
+      city: res.name,
+      country: res.sys.country
+    })
   }
 
   render() {
     return (
       <div className="App">
-        <Weather />
+        <Weather city={this.state.city} country={this.state.country} />
       </div>
     );
   };
